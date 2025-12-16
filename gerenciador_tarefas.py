@@ -1,4 +1,19 @@
+import json
+
 tarefas = []
+
+def carregar_tarefas():
+    try:
+        with open("tarefas.json", "r", encoding="utf-8") as arquivo:
+            dados = json.load(arquivo)
+            tarefas.extend(dados)
+    except FileNotFoundError:
+        pass 
+
+def salvar_tarefas():
+    with open("tarefas.json", "w", encoding="utf-8") as arquivo:
+        json.dump(tarefas, arquivo, ensure_ascii=False, indent=4)
+
 
 def mostrar_menu():
     print("\n=== GERENCIADOR DE TAREFAS ===")
@@ -42,6 +57,8 @@ def remover_tarefa():
 
         
 def main():
+    carregar_tarefas()
+
     while True:
         mostrar_menu()
         escolha = input("Escolha: ").strip()
@@ -52,6 +69,7 @@ def main():
         elif escolha == "3":
             remover_tarefa()
         elif escolha == "4":
+            salvar_tarefas()
             print("Saindo...")
             break
         else:
