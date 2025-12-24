@@ -20,7 +20,8 @@ def mostrar_menu():
     print("1 - Adicionar tarefa")
     print("2 - Listar tarefa")
     print("3 - Remover tarefa")
-    print("4 - Sair")
+    print("4 - Editar tarefa")
+    print("5 - Sair")
 
 def adicionar_tarefa():
     tarefa = input("Digite a tarefa: ").strip()
@@ -54,7 +55,28 @@ def remover_tarefa():
     except ValueError:
         print("Digite um número válido.")
 
+def editar_tarefa():
+    if not tarefas:
+        print("Nenhuma tarefa cadastrada.")
+        return
+    
+    listar_tarefas()
 
+    try:
+        numero = int(input("Digite o número da tarefa que deseja editar: "))
+        if 1 <= numero <= len(tarefas):
+            nova_tarefa = input("Digite o novo texto da tarefa: ").strip()
+
+            if nova_tarefa:
+                tarefas[numero - 1] = nova_tarefa
+                salvar_tarefas()  
+                print("Tarefa editada com sucesso!")
+            else:
+                print("O texto da tarefa não pode ser vazio.")
+        else:
+            print("Número inválido.")
+    except ValueError:
+        print("Digite um número válido.")
         
 def main():
     carregar_tarefas()
@@ -69,6 +91,8 @@ def main():
         elif escolha == "3":
             remover_tarefa()
         elif escolha == "4":
+            editar_tarefa()
+        elif escolha == "5":
             salvar_tarefas()
             print("Saindo...")
             break
