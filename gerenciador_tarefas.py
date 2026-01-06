@@ -1,6 +1,49 @@
 import json
 
+usuarios = {}
 tarefas = []
+
+def carregar_usuarios():
+    global usuarios
+    try:
+        with open("usuarios.json", "r", encoding="utf-8") as arquivo:
+            usuarios = json.load(arquivo)
+    except FileNotFoundError:
+        usuarios = {}
+
+def salvar_usuarios():
+    with open("usuarios.json", "w", encoding="utf-8") as arquivo:
+        json.dump(usuarios, arquivo, ensure_ascii=False, indent=4)
+
+
+def cadastrar_usuario():
+    usuario = input("Digite um nome de usuario: ").strip()
+
+    if usuario in usuarios:
+        print("Usuario já existe.")
+        return
+    
+    senha = input("Digite uma senha: ").strip()
+
+    if not usuario or not senha:
+        print("Usuário e senha não podem ser vazios.")
+        return
+    
+    usuarios[usuario] = senha
+    salvar_usuarios()
+    print("Usuário cadastrado com sucesso!")
+
+def login():
+    usuario = input("Usuário: ").strip()
+    senha = input("Senha: ").strip()
+
+    if usuario in usuarios and usuarios[usuario] == senha:
+        print("Login realizado com sucesso!")
+        return True
+    else:
+        print("Usuário ou senha incorretos.")
+        return False
+
 
 def carregar_tarefas():
     try:
@@ -77,13 +120,13 @@ def editar_tarefa():
             print("Número inválido.")
     except ValueError:
         print("Digite um número válido.")
-        
-def main():
-    carregar_tarefas()
 
+
+def menu_tarefas():
     while True:
         mostrar_menu()
         escolha = input("Escolha: ").strip()
+
         if escolha == "1":
             adicionar_tarefa()
         elif escolha == "2":
@@ -98,6 +141,31 @@ def main():
             break
         else:
             print("Opção inválida.")
+
+
+def main():
+    carregar_usuarios()
+    carregar_tarefas()
+
+    while True:
+        print("\n1 - Login")
+        print("2 - Cadastrar usuários")
+        print("3 - Sair")
+
+        opcao = input("Escolha: ").strip()
+
+        if opcao == "1":
+            if login():
+                menu_tarefas()
+        elif opcao == "2":
+            cadastrar_usuario()
+        elif opcao == "3":
+            print("Saindo do sistema...")
+            return
+        else:
+            print("Opção inválida.")
+    
+
 
 if __name__ == "__main__":
     main()
