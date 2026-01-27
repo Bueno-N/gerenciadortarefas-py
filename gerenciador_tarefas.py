@@ -39,10 +39,10 @@ def login():
 
     if usuario in usuarios and usuarios[usuario] == senha:
         print("Login realizado com sucesso!")
-        return True
+        return usuario
     else:
         print("Usuário ou senha incorretos.")
-        return False
+        return None
 
 
 def carregar_tarefas():
@@ -66,21 +66,31 @@ def mostrar_menu():
     print("4 - Editar tarefa")
     print("5 - Sair")
 
-def adicionar_tarefa():
-    tarefa = input("Digite a tarefa: ").strip()
-    if tarefa:
+def adicionar_tarefa(usuario_logado):
+    descricao = input("Digite a tarefa: ").strip()
+    if descricao:
+        tarefa = {
+            "descricao": descricao,
+            "usuario": usuario_logado
+        }
         tarefas.append(tarefa)
+        salvar_tarefas()
         print(f"Tarefa '{tarefa}' adicionada com sucesso!")
     else:
         print("Nenhuma tarefa digitada.")
 
-def listar_tarefas():
-    if not tarefas:
+def listar_tarefas(usuario_logado):
+    encontrou = False
+    print("\n=== SUAS TAREFAS ===")
+
+    for i, tarefa in enumerate(tarefas, start=1):
+        if tarefa["usuario"] == usuario_logado:
+            print(f"{i} - {tarefa["descricao"]}")
+            encontrou = True
+
+    if not encontrou:
         print("Nenhuma tarefa cadastrada.")
-        return
-    print("\n === TAREFAS CADASTRADAS ===")
-    for i, tarefa in enumerate (tarefas, start=1):
-        print(f"{i} - {tarefa}")
+
 
 def remover_tarefa():
     if not tarefas:
@@ -122,15 +132,15 @@ def editar_tarefa():
         print("Digite um número válido.")
 
 
-def menu_tarefas():
+def menu_tarefas(usuario_logado):
     while True:
         mostrar_menu()
         escolha = input("Escolha: ").strip()
 
         if escolha == "1":
-            adicionar_tarefa()
+            adicionar_tarefa(usuario_logado)
         elif escolha == "2":
-            listar_tarefas()
+            listar_tarefas(usuario_logado)
         elif escolha == "3":
             remover_tarefa()
         elif escolha == "4":
@@ -155,8 +165,9 @@ def main():
         opcao = input("Escolha: ").strip()
 
         if opcao == "1":
-            if login():
-                menu_tarefas()
+            usuario_logado = login()
+            if usuario_logado:
+                menu_tarefas(usuario_logado)
         elif opcao == "2":
             cadastrar_usuario()
         elif opcao == "3":

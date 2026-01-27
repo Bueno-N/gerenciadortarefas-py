@@ -1,4 +1,6 @@
 [
-    "limpar a casa pt2",
-    "atender o paciente taltaltal as 9:30"
+    {
+        "descricao": "lavar meu copo",
+        "usuario": "nico"
+    }
 ]
