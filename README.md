@@ -6,6 +6,7 @@ Projeto simples em Python para gerenciar tarefas no terminal.
 - Adicionar tarefa
 - Listar tarefas
 - Remover tarefa
+- Editar tarefas
 - Sair do programa
 
 ## Como rodar
