@@ -92,44 +92,72 @@ def listar_tarefas(usuario_logado):
         print("Nenhuma tarefa cadastrada.")
 
 
-def remover_tarefa():
-    if not tarefas:
-        print("Nenhuma tarefa cadastrada.")
+def remover_tarefa(usuario_logado):
+    tarefas_usuario = []
+
+    for i, tarefa in enumerate(tarefas):
+        if tarefa["usuario"] == usuario_logado:
+            tarefas_usuario.append((i, tarefa))
+
+    if not tarefas_usuario:
+        print("Nenhuma tarefa para remover.")
         return
     
-    listar_tarefas()
+    print("\n === Suas Tarefas ===")
+    for num, (indice_real, tarefa) in enumerate(tarefas_usuario, start=1):
+        print(f"{num} - {tarefa["descricao"]}")
+
     try:
-        numero = int(input("Digite o número da tarefa que deseja remover: "))
-        if 1 <= numero <= len(tarefas):
-            tarefa_removida = tarefas.pop(numero - 1)
-            print(f"Tarefa '{tarefa_removida}' removida com sucesso!" )
+        escolha = int(input("Numero da tarefa para remover: "))
+
+        if 1 <= escolha <= len(tarefas_usuario):
+            indice_real = tarefas_usuario[escolha -1][0]
+            removida = tarefas.pop(indice_real)
+            salvar_tarefas()
+            print(f"Tarefa '{removida['descricao']}' removida!")
         else:
-            print("Número inválido.")
+            print("Numero invalido.")
     except ValueError:
-        print("Digite um número válido.")
+        print("Digite um numero valido")
 
-def editar_tarefa():
-    if not tarefas:
-        print("Nenhuma tarefa cadastrada.")
+
+def editar_tarefa(usuario_logado):
+    tarefas_usuario = []
+
+    for i, tarefa in enumerate(tarefas):
+        if tarefa["usuario"] == usuario_logado:
+            tarefas_usuario.append((i, tarefa))
+
+    if not tarefas_usuario:
+        print("Nenhuma tarefa para editar.")
         return
     
-    listar_tarefas()
+    print("\n === SUAS TAREFAS ===")
+    for num, (indice_real, tarefa) in enumerate(tarefas_usuario, start=1):
+        print(f"{num} - {tarefa["descricao"]}")
 
     try:
-        numero = int(input("Digite o número da tarefa que deseja editar: "))
-        if 1 <= numero <= len(tarefas):
-            nova_tarefa = input("Digite o novo texto da tarefa: ").strip()
+        escolha = int(input("Numero da tarefa para editar: "))
 
-            if nova_tarefa:
-                tarefas[numero - 1] = nova_tarefa
-                salvar_tarefas()  
+        if 1 <= escolha <= len(tarefas_usuario):
+            indice_real = tarefas_usuario[escolha - 1][0]
+
+            nova_descricao = input("Nova descricao: ").strip()
+
+            if nova_descricao:
+                tarefas[indice_real]["descricao"] = nova_descricao
+                salvar_tarefas()
                 print("Tarefa editada com sucesso!")
             else:
-                print("O texto da tarefa não pode ser vazio.")
+                print("Descrição não pode ser vazia.")
         else:
-            print("Número inválido.")
+            print("Número inválido")
+
     except ValueError:
         print("Digite um número válido.")
+        
+        
+
 
 
 def menu_tarefas(usuario_logado):
@@ -142,9 +170,9 @@ def menu_tarefas(usuario_logado):
         elif escolha == "2":
             listar_tarefas(usuario_logado)
         elif escolha == "3":
-            remover_tarefa()
+            remover_tarefa(usuario_logado)
         elif escolha == "4":
-            editar_tarefa()
+            editar_tarefa(usuario_logado)
         elif escolha == "5":
             salvar_tarefas()
             print("Saindo...")
